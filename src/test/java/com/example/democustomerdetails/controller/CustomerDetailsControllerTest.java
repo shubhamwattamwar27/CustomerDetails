@@ -47,15 +47,16 @@ class CustomerDetailsControllerTest {
 
     @Test
     void shouldGetCustomer() throws Exception {
+        // given
         Long customerId = 1l;
         Customer customer = new Customer();
         customer.setId(customerId);
         customer.setFirstName("Shubham");
         customer.setLastName("Wattamwar");
-
         when(customerService.getCustomerById(customerId)).thenReturn(customer);
 
-        mockMvc.perform(get("/customerDetails/customer/{id}", customerId)
+        // when-then
+        mockMvc.perform(get("/customerDetails/customer?id=" + customerId)
                         .param("id", customerId.toString()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(customerId))
@@ -65,15 +66,17 @@ class CustomerDetailsControllerTest {
 
     @Test
     void shouldSaveCustomer() throws Exception {
+        // given
         CustomerRequestObject request = new CustomerRequestObject();
         request.setFirstName("Shubham");
 
-        String requestJson = "{ \"firstName\": \"Shubham\" }";
+        String requestJson = "{ \"firstName\": \"Shubham\", \"lastName\": \"Wattamwar\" , \"dob\": \"27/09/1995\" }";
 
         String customerSavedSuccessfully = "Customer saved successfully";
         when(customerService.saveCustomer(any(CustomerRequestObject.class)))
                 .thenReturn(customerSavedSuccessfully);
 
+        //when-then
         mockMvc.perform(post("/customerDetails/customer")
                         .contentType(APPLICATION_JSON)
                         .content(requestJson))

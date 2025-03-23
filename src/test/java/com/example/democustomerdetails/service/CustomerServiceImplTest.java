@@ -54,11 +54,13 @@ class CustomerServiceImplTest {
         when(customerRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         // When
-        Customer result = customerService.getCustomerById(customerId);
+        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () -> {
+            customerService.getCustomerById(customerId);
+        });
 
         // Then
-        assertThat(result).isNotNull();
-        assertThat(result).isEqualTo(new Customer());
+        assertThat(exception).isNotNull();
+        assertThat(exception.getMessage()).isEqualTo("400 Customer id not valid");
     }
 
     @Test
@@ -104,6 +106,6 @@ class CustomerServiceImplTest {
 
         // Then
         assertThat(exception).isNotNull();
-        assertThat(exception.getMessage()).isEqualTo("Customer cannot be null");
+        assertThat(exception.getMessage()).isEqualTo("400 Customer cannot be null");
     }
 }

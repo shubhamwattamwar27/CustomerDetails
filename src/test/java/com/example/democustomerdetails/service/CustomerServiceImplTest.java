@@ -16,12 +16,14 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @ExtendWith(MockitoExtension.class)
 class CustomerServiceImplTest {
 
     public static final String TEST_F_NAME = "TestFName";
     public static final String TEST_LAST_NAME = "TestLastName";
+    public static final String DOB = "27/08/2005";
 
     @Mock
     private CustomerRepository customerRepository;
@@ -34,7 +36,7 @@ class CustomerServiceImplTest {
     void shouldGetCustomerById() {
         // Given
         Long customerId = 1L;
-        Customer customer = new Customer(customerId, TEST_F_NAME, TEST_LAST_NAME, "27/08/2005");
+        Customer customer = new Customer(customerId, TEST_F_NAME, TEST_LAST_NAME, DOB);
         when(customerRepository.findById(anyLong())).thenReturn(Optional.of(customer));
 
         // When
@@ -60,15 +62,16 @@ class CustomerServiceImplTest {
 
         // Then
         assertThat(exception).isNotNull();
+        assertThat(exception.getStatusCode()).isEqualTo(BAD_REQUEST);
         assertThat(exception.getMessage()).isEqualTo("400 Customer id not valid");
     }
 
     @Test
     void shouldSaveCustomer() {
         // Given
-        CustomerRequestObject customerRequestObject = new CustomerRequestObject(TEST_F_NAME, TEST_LAST_NAME, "27/08/2005");
-        Customer customer = new Customer(null, TEST_F_NAME, TEST_LAST_NAME, "27/08/2005");
-        Customer savedCustomer = new Customer(2L, TEST_F_NAME, TEST_LAST_NAME, "27/08/2005");
+        CustomerRequestObject customerRequestObject = new CustomerRequestObject(TEST_F_NAME, TEST_LAST_NAME, DOB);
+        Customer customer = new Customer(null, TEST_F_NAME, TEST_LAST_NAME, DOB);
+        Customer savedCustomer = new Customer(2L, TEST_F_NAME, TEST_LAST_NAME, DOB);
         when(customerRepository.save(customer)).thenReturn(savedCustomer);
 
         // When
@@ -82,8 +85,8 @@ class CustomerServiceImplTest {
     @Test
     void shouldNotSaveCustomer() {
         // Given
-        CustomerRequestObject customerRequestObject = new CustomerRequestObject(TEST_F_NAME, TEST_LAST_NAME, "27/08/2005");
-        Customer customer = new Customer(null, TEST_F_NAME, TEST_LAST_NAME, "27/08/2005");
+        CustomerRequestObject customerRequestObject = new CustomerRequestObject(TEST_F_NAME, TEST_LAST_NAME, DOB);
+        Customer customer = new Customer(null, TEST_F_NAME, TEST_LAST_NAME, DOB);
         when(customerRepository.save(customer)).thenReturn(null);
 
         // When
@@ -106,6 +109,7 @@ class CustomerServiceImplTest {
 
         // Then
         assertThat(exception).isNotNull();
+        assertThat(exception.getStatusCode()).isEqualTo(BAD_REQUEST);
         assertThat(exception.getMessage()).isEqualTo("400 Customer cannot be null");
     }
 }

@@ -70,7 +70,9 @@ class CustomerDetailsControllerTest {
         CustomerRequestObject request = new CustomerRequestObject();
         request.setFirstName("Shubham");
 
-        String requestJson = "{ \"firstName\": \"Shubham\", \"lastName\": \"Wattamwar\" , \"dob\": \"27/09/1995\" }";
+        String requestJson = "{ \"firstName\": \"Shubham\"," +
+                " \"lastName\": \"Wattamwar\" ," +
+                " \"dob\": \"27/09/1995\" }";
 
         String customerSavedSuccessfully = "Customer saved successfully";
         when(customerService.saveCustomer(any(CustomerRequestObject.class)))
